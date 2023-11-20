@@ -21,9 +21,7 @@ def valid_create(ruta):
 
 
 def guardar_contenido_archivo(ubicacion, contenido):
-
     #Guardo el json obtenido en un archivo
- 
         valid_create(ubicacion)
         t = open(ubicacion,"a+") 
         t.write(contenido)
@@ -34,23 +32,16 @@ def guardar_titulo_Search(rta, file):
         titulo = ""
         for rta  in rta['Search']:
                 titulo = titulo + rta['Title'] + '\n'
-              #  if os.path.exists(file):
-                      
-              #          t = open(file,"w+") 
-                # else:
         valid_create(file)
         f = open(file, "a+")
         f.write(titulo)
         f.close() 
-          
         return True
 
 def llamar_endpoint(d, ubicacion):
-        #for url in d.values():
         for Key in d.keys():
             rtas[Key] = requests.get(d[Key])
             if rtas[Key].status_code ==200:
-                    #data = rtas[Key]
                     ls_pelis= json.dumps(rtas[Key].json(), indent=4)       
                     if (guardar_contenido_archivo(ubicacion,ls_pelis)):
                             print(r"grabo bien")
@@ -59,8 +50,8 @@ def llamar_endpoint(d, ubicacion):
 if __name__ == "__main__":
 
         d = {
-        "urlTitu": 'http://www.omdbapi.com/?apikey=dfb74b32&t=spiderman&plot=full&r=json',
-        "urlBusc": 'http://www.omdbapi.com/?apikey=dfb74b32&plot=full&r=json&S=spider'
+        "urlTitu": os.environ.get("urlTitu"),
+        "urlBusc": os.environ.get("urlBusc"),
         }
 
         rtas = {
@@ -68,9 +59,10 @@ if __name__ == "__main__":
                 "urlBusc": ''
         }
 
+        
 
-        file_Out = r"pelis\Pru\otro\output.json"
-        file_title_search = r"pelis\algo\otro\titles.json"
+        file_Out = os.environ.get("file_Out")
+        file_title_search = os.environ.get("file_title_search")
 
         #ejecuta EndPoint y guarda la respuesta
         llamar_endpoint(d, file_Out)
